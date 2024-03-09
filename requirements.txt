@@ -3,3 +3,4 @@ mlflow
 scikit-learn
 pandas
 ipykernel
+numba
