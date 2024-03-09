@@ -1,0 +1,20 @@
+import pandas as pd
+from Vectorize import read_file_to_list, create_vector_dict, vectorize_comment, vectorize_comments
+import numpy as np
+
+class Model:
+    def __init__(self):
+        comments = pd.read_csv('comments.csv').dropna()
+        neg_comments = comments[comments['Sentiment'] == 0.0]['Comment'].to_list()
+        pos_comments = comments[comments['Sentiment'] == 2.0]['Comment'].to_list()[:len(neg_comments)]
+
+        fpath = 'stopwords.txt'
+        STOPWORDS = read_file_to_list(fpath)
+        word_dict = create_vector_dict(pos_comments + neg_comments, STOPWORDS)
+        self.pos_vec = vectorize_comments(pos_comments, word_dict)
+        self.neg_vec = vectorize_comments(neg_comments, word_dict)
+        
+        self.comments_sum = np.array(self.pos_vec) + self.neg_vec
+    
+    def run(self, text: str) -> bool:
+        return True
