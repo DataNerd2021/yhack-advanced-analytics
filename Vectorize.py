@@ -14,7 +14,7 @@ def vectorize_comment(comment: str, word_dict: dict[str, int]) -> list[int]:
     vectorized_comment = [0] * len(word_dict)
     for word in words:
         if word in word_dict:
-            vectorized_comment[word_dict[word]] = 1
+            vectorized_comment[word_dict[word]] += 1
     return vectorized_comment
 
 def read_file_to_list(fpath: str) -> set[str]:
