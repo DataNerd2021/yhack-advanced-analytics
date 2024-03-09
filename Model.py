@@ -18,8 +18,8 @@ class Model:
         self.pos_prob_vec = self.pos_vec / self.comments_sum
         self.neg_prob_vec = 1 - self.pos_prob_vec
     
-    def run(self, text: str) -> bool:
+    def run(self, text: str) -> float:
         test_vec = vectorize_comment(text, self.word_dict)
         test_pos = np.dot(test_vec, self.pos_prob_vec)
         test_neg = np.dot(test_vec, self.neg_prob_vec)
-        return test_pos > test_neg
+        return test_pos/(test_pos + test_neg)
