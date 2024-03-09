@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from numba import njit
+#from numba import njit
 
 def create_vector_dict(comments: list[str], stopwords: set[str]) -> dict[str, int]:
     '''Creates a dictionary of words and their corresponding index in the vectorized representation of the comments'''
@@ -11,7 +11,7 @@ def create_vector_dict(comments: list[str], stopwords: set[str]) -> dict[str, in
     word_set = word_set - stopwords
     return {word: i for i, word in enumerate(word_set)}
 
-@njit
+# @njit
 def hash_word(word: str, max_len: int) -> int:
     '''Hashes a word to a unique integer'''
     return hash(word) % max_len
