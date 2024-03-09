@@ -40,10 +40,10 @@ if __name__ == '__main__':
     ds.dropna(inplace=True)
     pos_comments: list[str] = ds[ds['Sentiment'].isin([1.0, 2.0])]['Comment'].to_list()
     neg_comments: list[str] = ds[ds['Sentiment']==0.0]['Comment'].to_list()
+    comments: list[str] = ds['Comment'].to_list()
     fpath = 'stopwords.txt'
     STOPWORDS = read_file_to_list(fpath)
-    comments = ['I love this movie', 'I hate this movie', 'This movie is great']
-    word_dict = create_vector_dict(pos_comments, STOPWORDS)
+    word_dict = create_vector_dict(comments, STOPWORDS)
 
     # print(word_dict)
     comments_vec = vectorize_comments(pos_comments, word_dict)
