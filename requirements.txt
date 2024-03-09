@@ -2,3 +2,4 @@ nltk
 mlflow
 scikit-learn
 pandas
+ipykernel
