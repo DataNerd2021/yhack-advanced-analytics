@@ -1,12 +1,13 @@
 from tqdm import tqdm
 import json
 import numpy as np
-from sci
+import string
 
 def create_vector_dict(comments: list[str], stopwords: set[str]) -> dict[str, int]:
     '''Creates a dictionary of words and their corresponding index in the vectorized representation of the comments'''
     word_set = set()
     for comment in comments:
+        comment = comment.translate(str.maketrans('', '', string.punctuation))
         words = comment.split()
         for word in words:
             word_set.add(word)
@@ -15,6 +16,7 @@ def create_vector_dict(comments: list[str], stopwords: set[str]) -> dict[str, in
 
 def vectorize_comment(comment: str, word_dict: dict[str, int]) -> list[int]:
     '''Vectorizes a comment using the word dictionary'''
+    comment = comment.translate(str.maketrans('', '', string.punctuation))
     words = comment.split()
     vectorized_comment = [0] * len(word_dict)
     for word in words:
@@ -36,14 +38,21 @@ if __name__ == '__main__':
     import pandas as pd
     ds = pd.read_csv('comments.csv')
     ds.dropna(inplace=True)
-    X: list[str] = ds['Comment'].to_list()
+    pos_comments: list[str] = ds[ds['Sentiment'].isin([1.0, 2.0])]['Comment'].to_list()
+    neg_comments: list[str] = ds[ds['Sentiment']==0.0]['Comment'].to_list()
     fpath = 'stopwords.txt'
     STOPWORDS = read_file_to_list(fpath)
     comments = ['I love this movie', 'I hate this movie', 'This movie is great']
-    word_dict = create_vector_dict(X, STOPWORDS)
+    word_dict = create_vector_dict(pos_comments, STOPWORDS)
 
     # print(word_dict)
-    comments_vec = vectorize_comments(X, word_dict)
-    print(comments_vec)
-    with open('comments_vec.json', 'w') as f:
+    comments_vec = vectorize_comments(pos_comments, word_dict)
+    with open('pos_comments_vec.json', 'w') as f:
         json.dump(comments_vec, f)
+    
+    comments_vec = vectorize_comments(neg_comments, word_dict)
+    with open('neg_comments_vec.json', 'w') as f:
+        json.dump(comments_vec, f)
+    
+    with open('word_dict.json', 'w') as f:
+        json.dump(word_dict, f)
