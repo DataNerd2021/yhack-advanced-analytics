@@ -1,4 +1,5 @@
 from tqdm import tqdm
+import json
 from numba import njit
 
 def create_vector_dict(comments: list[str], stopwords: set[str]) -> dict[str, int]:
@@ -39,7 +40,7 @@ def test_hash(words: list[str]) -> None:
 def vectorize_comments(comments: list[str], word_dict: dict[str, int]) -> list[int]:
     '''Vectorizes a list of comments using the word dictionary and returns a sum of the vectors'''
     vectors = [vectorize_comment(comment, word_dict) for comment in tqdm(comments)]
-    return [sum(x) for x in zip(*vectors)]
+    return [sum(x) for x in tqdm(zip(*vectors))]
 
 def read_file_to_list(fpath: str) -> set[str]:
     return set(open(fpath, 'r').read().split('\n'))
@@ -59,6 +60,8 @@ if __name__ == '__main__':
     # print(word_dict)
     comments_vec = vectorize_comments(X, word_dict)
     print(comments_vec)
+    with open('vectors.json') as file:
+        json.dump(comments_vec, file)
     # print(vectorize_comment('I love this movie', word_dict))
     # print(vectorize_comment('I hate this movie', word_dict))
     # print(vectorize_comment('This movie is great', word_dict))
