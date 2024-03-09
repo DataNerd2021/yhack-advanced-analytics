@@ -1,5 +1,7 @@
 from tqdm import tqdm
 import json
+import numpy as np
+from sci
 
 def create_vector_dict(comments: list[str], stopwords: set[str]) -> dict[str, int]:
     '''Creates a dictionary of words and their corresponding index in the vectorized representation of the comments'''
@@ -22,8 +24,10 @@ def vectorize_comment(comment: str, word_dict: dict[str, int]) -> list[int]:
 
 def vectorize_comments(comments: list[str], word_dict: dict[str, int]) -> list[int]:
     '''Vectorizes a list of comments using the word dictionary and returns a sum of the vectors'''
-    vectors = [vectorize_comment(comment, word_dict) for comment in tqdm(comments)]
-    return [sum(x) for x in tqdm(zip(*vectors), total=len(word_dict))]
+    sum_vec = np.zeros(len(word_dict), dtype=np.int16)
+    for comment in tqdm(comments):
+        sum_vec += vectorize_comment(comment, word_dict)
+    return sum_vec.tolist()
 
 def read_file_to_list(fpath: str) -> set[str]:
     return set(open(fpath, 'r').read().split('\n'))
